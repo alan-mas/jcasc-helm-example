@@ -1,0 +1,73 @@
+controller:
+  installPlugins: 
+    # need to add this configuration-as-code due to a known jenkins issue: https://github.com/jenkinsci/helm-charts/issues/595
+  - "configuration-as-code:1414.v878271fc496f"
+  - "hashicorp-vault-plugin:latest"
+
+  # passing initial environments values to docker basic container
+  initContainerEnv:
+  - name: CASC_VAULT_TOKEN
+    value: "vault_token"
+  - name: CASC_VAULT_URL
+    value: "http://127.0.0.1:8200"
+  - name: CASC_VAULT_PATHS
+    value: "cubbyhole/jenkins"
+  - name: CASC_VAULT_ENGINE_VERSION
+    value: "2"
+  ContainerEnv:
+  - name: CASC_VAULT_TOKEN
+    value: "vault_token"
+  - name: CASC_VAULT_URL
+    value: "http://127.0.0.1:8200"
+  - name: CASC_VAULT_PATHS
+    value: "cubbyhole/jenkins"
+  - name: CASC_VAULT_ENGINE_VERSION
+    value: "2"
+
+  # globalNodeProperties:
+  # - envVars:
+  #     env:
+  #     - key: VARIABLE1
+  #       value: foo
+  #     - key: VARIABLE2
+  #       value: bar
+
+  JCasC:
+    configScripts:
+      this-is-where-i-configure-the-executors: |
+        jenkins:
+          numExecutors: 5
+      here-is-the-welcome-message: |
+        jenkins:
+          systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin by ALANMAS\n\n"
+      here-is-the-node-creation: |
+        jenkins:
+            nodes:
+            - permanent:
+                name: "static-agent1"
+                remoteFS: "/home/jenkins"
+                launcher:
+                  jnlp:
+                    workDirSettings:
+                      disabled: true
+                      failIfWorkDirIsMissing: false
+                      internalDir: "remoting"
+                      workDirPath: "/tmp"
+            - permanent:
+                name: "static-agent2"
+                remoteFS: "/home/jenkins"
+                launcher:
+                  jnlp:
+                    workDirSettings:
+                      disabled: true
+                      failIfWorkDirIsMissing: false
+                      internalDir: "remoting"
+                      workDirPath: "/tmp"
+      here-is-the-user-security: |
+        jenkins:
+          securityRealm:
+            local:
+              allowsSignup: false
+              users:
+                - id: "${JENKINS_ADMIN_ID}"
+                  password: "${JENKINS_ADMIN_PASSWORD}"
