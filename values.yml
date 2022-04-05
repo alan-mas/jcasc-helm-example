@@ -1,45 +1,46 @@
 controller:
-  installPlugins: 
+  # getting error https://github.com/jenkinsci/helm-charts/issues/592
+  # image: "alanmas/jenkins-test-helm"
+  # tag: "latest"
+  # installPlugins: false
+  Name: jenkins-master
+  Image: "jenkins/jenkins"
+  ImageTag: "2.134-alpine"
+  ImagePullPolicy: "IfNotPresent"
+  Component: "jenkins-master"
+  UseSecurity: true
+  AdminUser: admin
+  AdminPassword: "formetoknowforyoutofindout"
+  Cpu: "200m"
+  Memory: "1024Mi"
+  installPlugins:
     # need to add this configuration-as-code due to a known jenkins issue: https://github.com/jenkinsci/helm-charts/issues/595
   - "configuration-as-code:1414.v878271fc496f"
   - "hashicorp-vault-plugin:latest"
 
   # passing initial environments values to docker basic container
-  initContainerEnv:
-  - name: CASC_VAULT_TOKEN
-    value: "vault_token"
-  - name: CASC_VAULT_URL
-    value: "http://127.0.0.1:8200"
-  - name: CASC_VAULT_PATHS
-    value: "cubbyhole/jenkins"
-  - name: CASC_VAULT_ENGINE_VERSION
-    value: "2"
+  InitContainerEnv:
+
   ContainerEnv:
   - name: CASC_VAULT_TOKEN
-    value: "vault_token"
+    value: "my-token"
   - name: CASC_VAULT_URL
-    value: "http://127.0.0.1:8200"
+    value: "http://localhost:8200"
   - name: CASC_VAULT_PATHS
     value: "cubbyhole/jenkins"
   - name: CASC_VAULT_ENGINE_VERSION
     value: "2"
-
-  # globalNodeProperties:
-  # - envVars:
-  #     env:
-  #     - key: VARIABLE1
-  #       value: foo
-  #     - key: VARIABLE2
-  #       value: bar
+  # - name: CASC_JENKINS_CONFIG
+  #   value: "/var/jenkins_home/casc_configs/jenkins.yaml"
 
   JCasC:
     configScripts:
       this-is-where-i-configure-the-executors: |
         jenkins:
           numExecutors: 5
-      here-is-the-welcome-message: |
+      welcome-message: |
         jenkins:
-          systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin by ALANMAS\n\n"
+          systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin by AlanMas, my little friend."
       here-is-the-node-creation: |
         jenkins:
             nodes:
@@ -68,6 +69,18 @@ controller:
           securityRealm:
             local:
               allowsSignup: false
+              enableCaptcha: false
               users:
                 - id: "${JENKINS_ADMIN_ID}"
                   password: "${JENKINS_ADMIN_PASSWORD}"
+                  description: "testing user"
+        # credentials:
+        #   system:
+        #     domainCredentials:
+        #       - credentials:
+        #           - usernamePassword:
+        #               scope: "GLOBAL"
+        #               id: "alan_id"
+        #               username: "alan_user"
+        #               password: "acosta"
+        #               description: "test de prueba"
