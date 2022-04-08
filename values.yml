@@ -1,37 +1,53 @@
+# credentials:
+#   system:
+#     domainCredentials:
+#       - credentials:
+#           - usernamePassword:
+#               scope: "GLOBAL"
+#               id: "hola carnal"
+#               username: "pepe"
+#               password: "pecas"
+#               description: "i am catto with doggo pass"
+
 controller:
-  # getting error https://github.com/jenkinsci/helm-charts/issues/592
-  # image: "alanmas/jenkins-test-helm"
-  # tag: "latest"
-  # installPlugins: false
-  Name: jenkins-master
-  Image: "jenkins/jenkins"
-  ImageTag: "2.134-alpine"
-  ImagePullPolicy: "IfNotPresent"
-  Component: "jenkins-master"
-  UseSecurity: true
-  AdminUser: admin
-  AdminPassword: "formetoknowforyoutofindout"
-  Cpu: "200m"
-  Memory: "1024Mi"
+#   # getting error https://github.com/jenkinsci/helm-charts/issues/592
+#   # image: "alanmas/jenkins-test-helm"
+#   # tag: "latest"
+#   # installPlugins: false
+#   # name: jenkins-master
+#   # image: "alanmas/jenkins-test-helm"
+#   # tag: "v.1"
+#   # installPlugins: false
+#   # ImagePullPolicy: "IfNotPresent"
+#   # Component: "jenkins-master"
+#   # UseSecurity: true
+#   # AdminUser: admin
+#   # AdminPassword: "formetoknowforyoutofindout"
+#   # Cpu: "200m"
+#   # Memory: "1024Mi"
   installPlugins:
     # need to add this configuration-as-code due to a known jenkins issue: https://github.com/jenkinsci/helm-charts/issues/595
   - "configuration-as-code:1414.v878271fc496f"
   - "hashicorp-vault-plugin:latest"
 
   # passing initial environments values to docker basic container
-  InitContainerEnv:
+  # InitContainerEnv:
 
-  ContainerEnv:
+  containerEnv:
   - name: CASC_VAULT_TOKEN
-    value: "my-token"
+    value: "root"
   - name: CASC_VAULT_URL
-    value: "http://localhost:8200"
+    value: "http://192.168.65.2:8200"
   - name: CASC_VAULT_PATHS
-    value: "cubbyhole/jenkins"
+    value: "secret/jenkins"
   - name: CASC_VAULT_ENGINE_VERSION
     value: "2"
   # - name: CASC_JENKINS_CONFIG
   #   value: "/var/jenkins_home/casc_configs/jenkins.yaml"
+  # initScripts:
+  #  - |
+  #    print 'adding global pipeline libraries, register properties, bootstrap jobs...'
+
 
   JCasC:
     configScripts:
@@ -72,7 +88,16 @@ controller:
               enableCaptcha: false
               users:
                 - id: "${JENKINS_ADMIN_ID}"
+                  name: "Admin de secret/jenkins"
                   password: "${JENKINS_ADMIN_PASSWORD}"
+                  description: "testing user"
+                # - id: "${id}"
+                #   name: "Admin de secrets/jenkins"
+                #   password: "${password}"
+                #   description: "testing user"
+                - id: "pepe"
+                  name: "usuario creado sin vault"
+                  password: "pecas"
                   description: "testing user"
         # credentials:
         #   system:
