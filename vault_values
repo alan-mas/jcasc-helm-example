@@ -1,3 +1,0 @@
-CASC_VAULT_TOKEN=<vault_token>
-CASC_VAULT_URL=http://10.180.0.1:8200
-CASC_VAULT_PATHS=cubbyhole/jenkins

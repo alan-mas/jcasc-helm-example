@@ -1,30 +1,4 @@
-# credentials:
-#   system:
-#     domainCredentials:
-#       - credentials:
-#           - usernamePassword:
-#               scope: "GLOBAL"
-#               id: "hola carnal"
-#               username: "pepe"
-#               password: "pecas"
-#               description: "i am catto with doggo pass"
-
 controller:
-#   # getting error https://github.com/jenkinsci/helm-charts/issues/592
-#   # image: "alanmas/jenkins-test-helm"
-#   # tag: "latest"
-#   # installPlugins: false
-#   # name: jenkins-master
-#   # image: "alanmas/jenkins-test-helm"
-#   # tag: "v.1"
-#   # installPlugins: false
-#   # ImagePullPolicy: "IfNotPresent"
-#   # Component: "jenkins-master"
-#   # UseSecurity: true
-#   # AdminUser: admin
-#   # AdminPassword: "formetoknowforyoutofindout"
-#   # Cpu: "200m"
-#   # Memory: "1024Mi"
   installPlugins:
     # need to add this configuration-as-code due to a known jenkins issue: https://github.com/jenkinsci/helm-charts/issues/595
   - "configuration-as-code:1414.v878271fc496f"
@@ -42,12 +16,6 @@ controller:
     value: "secret/jenkins"
   - name: CASC_VAULT_ENGINE_VERSION
     value: "2"
-  # - name: CASC_JENKINS_CONFIG
-  #   value: "/var/jenkins_home/casc_configs/jenkins.yaml"
-  # initScripts:
-  #  - |
-  #    print 'adding global pipeline libraries, register properties, bootstrap jobs...'
-
 
   JCasC:
     configScripts:
@@ -91,21 +59,7 @@ controller:
                   name: "Admin de secret/jenkins"
                   password: "${JENKINS_ADMIN_PASSWORD}"
                   description: "testing user"
-                # - id: "${id}"
-                #   name: "Admin de secrets/jenkins"
-                #   password: "${password}"
-                #   description: "testing user"
                 - id: "pepe"
                   name: "usuario creado sin vault"
                   password: "pecas"
                   description: "testing user"
-        # credentials:
-        #   system:
-        #     domainCredentials:
-        #       - credentials:
-        #           - usernamePassword:
-        #               scope: "GLOBAL"
-        #               id: "alan_id"
-        #               username: "alan_user"
-        #               password: "acosta"
-        #               description: "test de prueba"
