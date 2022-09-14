@@ -3,19 +3,20 @@ controller:
     # need to add this configuration-as-code due to a known jenkins issue: https://github.com/jenkinsci/helm-charts/issues/595
   - "configuration-as-code:1414.v878271fc496f"
   - "hashicorp-vault-plugin:latest"
+  - "pipeline:latest"
 
   # passing initial environments values to docker basic container
   # InitContainerEnv:
 
-  containerEnv:
-  - name: CASC_VAULT_TOKEN
-    value: "root"
-  - name: CASC_VAULT_URL
-    value: "http://192.168.65.2:8200"
-  - name: CASC_VAULT_PATHS
-    value: "secret/jenkins"
-  - name: CASC_VAULT_ENGINE_VERSION
-    value: "2"
+  # containerEnv:
+  # - name: CASC_VAULT_TOKEN
+  #   value: "root"
+  # - name: CASC_VAULT_URL
+  #   value: "http://192.168.65.2:8200"
+  # - name: CASC_VAULT_PATHS
+  #   value: "secret/jenkins"
+  # - name: CASC_VAULT_ENGINE_VERSION
+  #   value: "2"
 
   JCasC:
     configScripts:
@@ -55,10 +56,10 @@ controller:
               allowsSignup: false
               enableCaptcha: false
               users:
-                - id: "${JENKINS_ADMIN_ID}"
-                  name: "Admin de secret/jenkins"
-                  password: "${JENKINS_ADMIN_PASSWORD}"
-                  description: "testing user"
+                # - id: "${JENKINS_ADMIN_ID}"
+                #   name: "Admin de secret/jenkins"
+                #   password: "${JENKINS_ADMIN_PASSWORD}"
+                #   description: "testing user"
                 - id: "pepe"
                   name: "usuario creado sin vault"
                   password: "pecas"
