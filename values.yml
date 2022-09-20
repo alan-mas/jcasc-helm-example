@@ -1,8 +1,12 @@
 controller:
   installPlugins:
     # need to add this configuration-as-code due to a known jenkins issue: https://github.com/jenkinsci/helm-charts/issues/595
-  - "configuration-as-code:1414.v878271fc496f"
+  # - "configuration-as-code:1414.v878271fc496f"
+  - "configuration-as-code:1512.vb_79d418d5fc8"
   - "hashicorp-vault-plugin:latest"
+  - "workflow-aggregator:590.v6a_d052e5a_a_b_5"
+  - "blueocean:1.25.8"
+  - "job-dsl:1.81"
 
   # passing initial environments values to docker basic container
   # InitContainerEnv:
@@ -63,3 +67,23 @@ controller:
                   name: "usuario creado sin vault"
                   password: "pecas"
                   description: "testing user"
+      here-is-the-job-creation: |
+        jobs:
+        - script: >
+            pipelineJob('first-pipeline-seed') {
+              description('testing')
+              definition {
+                cpsScm {
+                  scm {
+                    git {
+                      branch('main')
+                      remote {
+                        url('https://github.com/alan-mas/jcasc-helm-example.git')
+                      }
+                    }
+                  }
+                  scriptPath('jobs/Jenkinsfile')
+                }
+              }
+            }
+              
